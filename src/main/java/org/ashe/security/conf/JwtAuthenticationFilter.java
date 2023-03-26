@@ -34,9 +34,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         jwt = authHeader.substring(7); // the length of 'Bearer' plus 'space' is 7
         userEmail = jwtService.extractUsername(jwt);
+        // extract email from jwt
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // select email from database
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+            // user is exist & jwt is valid
             if (jwtService.isTokenValid(jwt, userDetails)) {
+                // issue token to user
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
@@ -48,6 +52,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 }

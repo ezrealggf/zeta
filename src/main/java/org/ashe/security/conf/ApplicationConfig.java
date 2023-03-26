@@ -19,6 +19,10 @@ public class ApplicationConfig {
 
     private final UserRepository userRepository;
 
+    /**
+     * 实现UserDetailsService的Bean
+     * 重写loadUserByUsername方法
+     */
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepository.findByEmail(username)
